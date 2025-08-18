@@ -25,6 +25,7 @@ const AddBook = () => {
     setIsLoading(true);
     setMessage({ type: '', text: '' });
 
+
     try {
       const response = await fetch('http://localhost:8080/addbook', {
         method: 'POST',
@@ -34,11 +35,13 @@ const AddBook = () => {
         body: JSON.stringify(bookData)
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error('Failed to add book');
+        throw new Error(data.message);
       }
 
-      const data = await response.json();
+      
       setMessage({ type: 'success', text: 'Book added successfully!' });
       setBookData({ 
         book_Title: '', 
@@ -46,8 +49,9 @@ const AddBook = () => {
         book_Category: '',
         book_Status: 'A',
         book_Avaliability: 'A'
-      }); // Reset form
+      });
     } catch (error) {
+      console.log(error);
       setMessage({ type: 'error', text: error.message });
     } finally {
       setIsLoading(false);

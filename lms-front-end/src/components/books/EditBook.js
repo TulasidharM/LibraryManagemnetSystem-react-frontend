@@ -34,13 +34,12 @@ const EditBook = ({ book, onClose, onUpdate }) => {
         },
         body: JSON.stringify(bookData)
       });
-
+      const data = await response.json();
       if (!response.ok) {
-        throw new Error('Failed to update book');
+        throw new Error(data.message);
       }
 
       const updatedBook = await response.json();
-      // Call onUpdate with the updated book data
       onUpdate(updatedBook);
       onClose();
     } catch (err) {
@@ -95,6 +94,20 @@ const EditBook = ({ book, onClose, onUpdate }) => {
               <option value="Technology">Technology</option>
               <option value="History">History</option>
               <option value="Biography">Biography</option>
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="book_Status">Status</label>
+            <select
+              id="book_Status"
+              name="book_Status"
+              value={bookData.book_Status}
+              onChange={handleChange}
+              required
+            >
+              <option value="I">In-Active</option>
+              <option value="A">Active</option>
             </select>
           </div>
 

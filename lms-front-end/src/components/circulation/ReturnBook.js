@@ -38,23 +38,30 @@ const ReturnBook = () => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    if (!formData.email) return;
+    if (!formData.email) {
+      return;
+    }
+
+    const regex = new RegExp("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
 
     try {
+      if(!regex.test(formData.email) ){
+        throw new Error('Email not valid!');
+      } 
       setIsLoading(true);
+
+      const memberResponse = await fetch(`http://localhost:8080/searchmember?email=${formData.email}`);
+      
+      if (!memberResponse.ok) throw new Error("Member doesn't exist!");
+      
+      const member = await memberResponse.json();
+      setSelectedMemberDetails(member);
+
       const response = await fetch('http://localhost:8080/issued-records');
       if (!response.ok) throw new Error('Failed to fetch records');
       
       const records = await response.json();
       
-      // First find member with matching email
-      const memberResponse = await fetch(`http://localhost:8080/searchmember?email=${formData.email}`);
-      if (!memberResponse.ok) throw new Error('Member not found');
-      
-      const member = await memberResponse.json();
-      setSelectedMemberDetails(member);
-      
-      // Filter records for this member and status 'I' (issued)
       const memberBooks = records.filter(record => 
         record.memberId === member.member_Id && 
         record.status === 'I'
@@ -64,19 +71,15 @@ const ReturnBook = () => {
         throw new Error('No books currently issued to this member');
       }
 
-      // Fetch book details for each issued book
       const booksResponse = await fetch('http://localhost:8080/getallbooks');
       if (!booksResponse.ok) throw new Error('Failed to fetch books');
       const booksData = await booksResponse.json();
 
-      // Create a lookup map for books
       const booksMap = booksData.reduce((acc, book) => {
         acc[book.book_Id] = book;
         return acc;
       }, {});
 
-      // Combine issue records with book details
-      // First update the issuedBooksWithDetails to include bookId
       const issuedBooksWithDetails = memberBooks.map(record => ({
         issueId: record.issueId,
         bookId: record.bookId,
@@ -163,7 +166,6 @@ const ReturnBook = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              pattern="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
             />
           </div>
           <button 
@@ -207,7 +209,7 @@ const ReturnBook = () => {
             onClick={handleCancel}
             className="return-book-button secondary"
           >
-            Cancel
+            Clear Form
           </button>
         </div>
       </form>
@@ -216,3 +218,6 @@ const ReturnBook = () => {
 };
 
 export default ReturnBook;
+
+
+

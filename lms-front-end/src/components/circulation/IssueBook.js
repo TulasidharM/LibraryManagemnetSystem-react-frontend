@@ -50,12 +50,19 @@ const IssueBook = () => {
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!formData.email) return;
-
+    const regex = new RegExp("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
+   
     try {
+      if(!regex.test(formData.email) ){
+        throw new Error('Email not valid!');
+      } 
       setIsLoading(true);
       const response = await fetch(`http://localhost:8080/searchmember?email=${formData.email}`);
-      if (!response.ok) throw new Error('Member not found');
-      const member = await response.json();
+      const data = await response.json();
+      
+      if (!response.ok ) throw new Error(data.message);
+
+      const member = data;
       setFormData(prev => ({
         ...prev,
         selectedMember: member.member_Id.toString()
@@ -95,10 +102,9 @@ const IssueBook = () => {
 
       if (!response.ok) throw new Error('Failed to issue book');
       
-      const data = await response.json();
       setMessage({ type: 'success', text: 'Book issued successfully!' });
       setFormData({ selectedMember: '', email: '', selectedBook: '' });
-      fetchBooks(); // Refresh books list to update availability
+      fetchBooks(); 
     } catch (error) {
       setMessage({ type: 'error', text: error.message });
     } finally {
@@ -134,7 +140,7 @@ const IssueBook = () => {
           </select>
         </div>
 
-        <div className="form-group search-group">
+        <div className="form-group">
           <div className="input-container">
             <label htmlFor="email">Or Enter Email</label>
             <input
@@ -143,7 +149,6 @@ const IssueBook = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              pattern="^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
               placeholder="member@example.com"
             />
           </div>

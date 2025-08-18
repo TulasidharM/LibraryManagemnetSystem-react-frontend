@@ -20,7 +20,7 @@ function App() {
       <div className="App">
         <header className="lms-header">
           <div className="logo-section">
-            <img src="/book-logo.jpg" alt="LMS Logo" className="logo" />
+            <img src="/Library.png" alt="LMS Logo" className="logo" />
             <h1>Library Management System</h1>
           </div>
         </header>
@@ -28,7 +28,7 @@ function App() {
         <div className="main-container">
           <aside className="sidebar">
             <div className="sidebar-section">
-              <h3>📚 Book Management</h3>
+              <h3>Book Management</h3>
               <ul>
                 <li><Link to="/add-book" className="sidebar-btn">Add Book</Link></li>
                 <li><Link to="/view-books" className="sidebar-btn">View Books</Link></li>
@@ -36,7 +36,7 @@ function App() {
             </div>
 
             <div className="sidebar-section">
-              <h3>👥 Members</h3>
+              <h3>Members</h3>
               <ul>
                 <li><Link to="/add-member" className="sidebar-btn">Add Member</Link></li>
                 <li><Link to="/view-members" className="sidebar-btn">View Members</Link></li>
@@ -44,7 +44,7 @@ function App() {
             </div>
 
             <div className="sidebar-section">
-              <h3>🔄 Circulation</h3>
+              <h3>Circulation</h3>
               <ul>
                 <li><Link to="/issue-book" className="sidebar-btn">Issue Book</Link></li>
                 <li><Link to="/return-book" className="sidebar-btn">Return Book</Link></li>
@@ -53,7 +53,7 @@ function App() {
             </div>
 
             <div className="sidebar-section">
-              <h3>📊 Reports</h3>
+              <h3>Reports</h3>
               <ul>
                 <li><Link to="/analytics" className="sidebar-btn">Analytics</Link></li>
                 <li><Link to="/members-books" className="sidebar-btn">Members Books</Link></li>
@@ -81,7 +81,7 @@ function App() {
               <Route path="/analytics" element={<Analytics />} />
               <Route path="/members-books" element={<MembersBooks />} />
               <Route path="/books-members" element={<BooksMembers />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path="*" element={<Navigate to="/" />} />
             </Routes>
           </main>
         </div>

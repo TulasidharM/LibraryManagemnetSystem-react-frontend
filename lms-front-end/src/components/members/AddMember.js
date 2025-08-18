@@ -34,8 +34,11 @@ const AddMember = () => {
         body: JSON.stringify(memberData)
       });
 
+     
       if (!response.ok) {
-        throw new Error('Failed to add member');
+         const data = await response.json();
+         console.log(data);
+        throw new Error(data.message);
       }
 
       const data = await response.json();
