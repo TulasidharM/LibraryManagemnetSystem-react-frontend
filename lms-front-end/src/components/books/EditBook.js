@@ -39,7 +39,7 @@ const EditBook = ({ book, onClose, onUpdate }) => {
         throw new Error(data.message);
       }
 
-      const updatedBook = await response.json();
+      const updatedBook = data;
       onUpdate(updatedBook);
       onClose();
     } catch (err) {

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './AddBook.css';
+import { addBookService } from '../../services/BookService';
 
 const AddBook = () => {
   const [bookData, setBookData] = useState({
@@ -25,37 +26,20 @@ const AddBook = () => {
     setIsLoading(true);
     setMessage({ type: '', text: '' });
 
-
-    try {
-      const response = await fetch('http://localhost:8080/addbook', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(bookData)
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message);
-      }
-
-      
-      setMessage({ type: 'success', text: 'Book added successfully!' });
-      setBookData({ 
-        book_Title: '', 
-        book_Author: '', 
-        book_Category: '',
-        book_Status: 'A',
-        book_Avaliability: 'A'
-      });
-    } catch (error) {
-      console.log(error);
-      setMessage({ type: 'error', text: error.message });
-    } finally {
-      setIsLoading(false);
-    }
+    addBookService(bookData,setMessage,setBookData,setIsLoading)
+      .then( (result) => {
+        console.log(result);
+        setMessage({ type: 'success', text: result.message });
+        setBookData({ 
+            book_Title: '',
+            book_Author: '', 
+            book_Category: '',
+            book_Status: 'A',
+            book_Avaliability: 'A'
+        })
+      })
+      .catch(e=>setMessage({ type: 'error', text: e.message }))
+      .finally(setIsLoading(false))
   };
 
   return (
